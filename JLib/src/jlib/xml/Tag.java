@@ -62,10 +62,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
-
-
 /**
  * Class to load and hold Xml documents.
  * Once loaded (see methods {@link #load} and {@link #loadFromString}), the document
@@ -891,16 +887,14 @@ public class Tag
 	{
 		 try 
 		 {
-	        OutputFormat format = new OutputFormat(m_doc);
-	        format.setIndenting(true);
-	        format.setIndent(4);
-	        StringWriter sw = new StringWriter();
-	        Writer output = new BufferedWriter(sw);
-	        XMLSerializer serializer = new XMLSerializer(output, format);
-	        serializer.serialize(m_doc);
-	        
-	        String cs = sw.getBuffer().toString();
-	        return cs;
+ 			 Transformer transformer = TransformerFactory.newInstance().newTransformer();
+			 transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			 transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+			 //initialize StreamResult with File object to save to file
+			 StreamResult result = new StreamResult(new StringWriter());
+			 DOMSource source = new DOMSource(m_doc);
+			 transformer.transform(source, result);
+			 return result.getWriter().toString();
 		 } 
 		 catch (Exception e) 
 		 { 
@@ -912,14 +906,13 @@ public class Tag
 	{
 		 try 
 		 {
-	        OutputFormat format = new OutputFormat(m_doc);
-	        format.setIndenting(true);
-	        format.setIndent(4);
-	        FileOutputStream out = new FileOutputStream(csFileName);
-	        Writer output = new BufferedWriter(new OutputStreamWriter(out, "utf-8"));
-	        //Writer output = new BufferedWriter( new FileWriter(csFileName) );
-	        XMLSerializer serializer = new XMLSerializer(output, format);
-	        serializer.serialize(m_doc);
+ 			 Transformer transformer = TransformerFactory.newInstance().newTransformer();
+			 transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			 transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+			 //initialize StreamResult with File object to save to file
+			 StreamResult result = new StreamResult(new File(csFileName));
+			 DOMSource source = new DOMSource(m_doc);
+			 transformer.transform(source, result);
 		 } 
 		 catch (Exception e) 
 		 { 

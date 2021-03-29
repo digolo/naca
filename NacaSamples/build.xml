@@ -1,0 +1,87 @@
+<project name="NacaSamples" default="all">
+
+	<property environment="env"/>
+	<property name="naca.home" value="${env.HOME}/develop/personal/naca"/>	
+
+	<target name="clean">
+		<delete dir="${naca.home}/${ant.project.name}/bin" quiet="true"/>
+		<delete file="${naca.home}/${ant.project.name}/${ant.project.name}.jar"/>
+	</target>
+
+	<target name="clean-src">
+		<delete dir="${naca.home}/${ant.project.name}/src" quiet="true"/>
+	</target>
+
+	<target name="transcode" depends="clean-src">
+		<mkdir dir="${naca.home}/${ant.project.name}/src"/>
+
+		<java classname="NacaTrans" fork="true" failonerror="true" maxmemory="128m">
+			<!--arg value="-Program=GSATAAU0"/-->
+			<arg value="-CONFIGFILE=${naca.home}/${ant.project.name}/trans/NacaTransSamples.cfg"/>
+			<classpath>
+				<pathelement path="${naca.home}/JLib/JLib.jar"/>
+				<pathelement path="${naca.home}/NacaTrans/bin"/>
+				<fileset dir="${naca.home}/NacaTrans/lib">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</java>
+
+	</target>
+
+	<target name="build">
+		<mkdir dir="${naca.home}/${ant.project.name}/bin"/>
+		<javac srcdir="${naca.home}/${ant.project.name}/src"
+		       destdir="${naca.home}/${ant.project.name}/bin"
+		       debug="true"
+		       encoding="ISO-8859-1"
+		       release="8"
+		       includeantruntime="false">
+			<classpath>
+				<fileset dir="${naca.home}/NacaRT/lib">
+					<include name="*.jar"/>
+				</fileset>
+				<pathelement path="${naca.home}/NacaRT/NacaRT.jar"/>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="rebuild" depends="clean,transcode,build,source,jar"/>
+	
+	<target name="jar">
+		<jar destfile="${naca.home}/${ant.project.name}/${ant.project.name}.jar" basedir="./bin"/>
+	</target>
+
+	<target name="source">
+		<copy todir="${naca.home}/${ant.project.name}/bin" flatten="true" includeEmptyDirs="false">
+			<fileset dir="${naca.home}/${ant.project.name}/src"/>
+		</copy>
+	</target>
+
+	<target name="run-BATCH1" depends="jar">
+		<java classname="nacaLib.batchPrgEnv.BatchMain" fork="true" failonerror="true" maxmemory="128m">
+			<arg value="-Program=BATCH1"/>
+			<arg value="-ConfigFile=${naca.home}/${ant.project.name}/NacaRT.cfg"/>
+			<arg value="-Path=${naca.home}/${ant.project.name}/bin"/>
+			<arg value="-FileIn=${naca.home}/${ant.project.name}/BatchFiles/In/FileIn.data,advancedMode,ascii,fixed,CRLF" />
+			<arg value="-FileOut=${naca.home}/${ant.project.name}/BatchFiles/Out/FileOut.data,advancedMode,ascii,fixed,CRLF" />
+			<classpath>
+				<pathelement location="${naca.home}/${ant.project.name}/${ant.project.name}.jar"/>
+				<pathelement location="${naca.home}/JLib/JLib.jar"/>
+				<pathelement location="${naca.home}/NacaRT/NacaRT.jar"/>
+				<fileset dir="${naca.home}/NacaRT/lib">
+					<include name="*.jar"/>
+					<include name="*.zip"/>
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="all" depends="rebuild,transcode,jar">
+		<!--
+		<copy file="./NacaRT.jar" tofile="../../PagesJaunesFr/PagesJaunesPOCJavaPrg/lib/NacaRT.jar"/>
+		<copy file="./NacaRT.jar" tofile="../../PagesJaunesFr/libToShip/NacaRT.jar"/>
+		-->
+	</target>
+
+</project>

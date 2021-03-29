@@ -10,7 +10,7 @@
     </servlet>
     <servlet>
         <servlet-name>BaseCheckService</servlet-name>
-        <servlet-class>publigroupe.utils.checkservice.BaseCheckService</servlet-class>
+        <servlet-class>idea.servlets.BaseCheckServiceServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CheckService</servlet-name>

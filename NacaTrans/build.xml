@@ -1,0 +1,24 @@
+<project name="NacaTrans" default="all">
+	<target name="clean">
+		<delete dir="./bin" quiet="true"/>
+		<delete file="./NacaTrans.jar"/>
+	</target>
+	<target name="build">
+		<mkdir dir="./bin"/>
+		<javac srcdir="." destdir="./bin" debug="true" encoding="ISO-8859-1" release="8" includeantruntime="false">
+			<classpath>
+				<pathelement path="../JLib/JLib.jar"/>
+				<pathelement path="./lib/jaxp-ri-1.4.1.jar"/>
+				<pathelement path="./lib/log4j-1.2.14.jar"/>
+				<pathelement path="./lib/ant.jar"/>
+			</classpath>
+		</javac>
+	</target>
+	<target name="rebuild" depends="clean,build"/>
+	<target name="jar">
+		<jar destfile="./NacaTrans.jar" basedir="./bin" includes="**/*" />
+	</target>
+
+	<target name="all" depends="rebuild,jar" />
+
+</project>
