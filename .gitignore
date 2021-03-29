@@ -1,0 +1,14 @@
+JLib/bin/
+JLib/JLib.jar
+NacaRT/lib/JLib.jar
+NacaRT/Naca.war
+NacaRT/NacaRT.jar
+NacaRT/bin/
+NacaTrans/NacaTrans.jar
+NacaTrans/bin/
+NacaSamples/LogJava.Log
+NacaSamples/NacaSamples.jar
+NacaSamples/bin/
+NacaSamples/src/
+NacaSamples/trans/info/
+NacaSamples/trans/stat/
